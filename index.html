@@ -44,8 +44,8 @@ $('view').innerHTML=`<h2>Ricerca guidata</h2><p class="muted">Descrivi le condiz
 <div class="guided-steps">
 <details class="panel guided-step" open><summary><span class="tag">1 · Esigenza</span><h3>Che cosa devi realizzare?</h3></summary><div class="guided-fields">${guidedField('funzione','Destinazione d’uso',['Non ancora definita',...choices.funzione.slice(1)],criteria.funzione)}<small class="field-help">Indica a cosa deve servire lo spazio. Le quattro macro-categorie restano quelle adottate nella matrice e nell’abaco.</small>
 <label>Attività specifica <select id="evento"><option value="">Seleziona prima la destinazione d’uso</option></select><small class="field-help">Dettaglia la funzione all’interno della macro-categoria scelta. Le opzioni derivano dalle funzioni documentate nei casi studio.</small></label>
-<label>Capienza indicativa / numero di utenti <input id="utenti" type="number" min="1" step="1" placeholder="Non ancora definita"><small class="field-help">Numero indicativo di persone che lo spazio deve poter accogliere. Se non è noto, lascia il campo vuoto.</small></label>
-<label>Superficie indicativa (m²) <input id="superficie" type="number" min="0" step="any" placeholder="Non ancora definita"><small class="field-help">Valore approssimativo espresso in metri quadrati.</small></label>
+<label>Numero indicativo di utenti <input id="utenti" type="number" min="1" step="1" placeholder="Non ancora definito"><small class="field-help">Seleziona prima l’attività specifica: dove esiste uno standard applicabile, il sito può proporre una superficie di riferimento.</small></label>
+<label>Superficie indicativa (m²) <input id="superficie" type="number" min="0" step="any" placeholder="Inserisci o calcola"><small class="field-help">Superficie inseribile e modificabile manualmente. Le stime automatiche riguardano solo l’ambito indicato dalla fonte, non l’intero edificio.</small><small id="stimaSuperficie" class="field-help" aria-live="polite"></small></label>
 <label>Configurazione dello spazio <select id="configurazione"><option>Non ancora definita</option><option>Spazio aperto</option><option>Spazio chiuso</option><option>Configurazione mista</option></select></label></div></details>
 <details class="panel guided-step"><summary><span class="tag">2 · Tempo</span><h3>Quando e per quanto tempo servirà?</h3></summary><div class="guided-fields">${guidedField('durata','Permanenza prevista della configurazione',['Non ancora definita',...choices.durata.slice(1)],criteria.durata)}<small class="field-help">È confrontata con la durata della prima configurazione documentata nei casi; non coincide con il periodo dell’anno né con eventuali rimontaggi o trasferimenti.</small>
 <label>Periodo d’impiego <select id="periodo"><option>Non ancora definito</option><option>Tutto l’anno</option><option>Primavera</option><option>Estate</option><option>Autunno</option><option>Inverno</option><option>Periodo specifico</option></select><small class="field-help">Indica quando l’architettura sarà effettivamente utilizzata ed è distinto dalla sua permanenza sul sito.</small></label>
@@ -72,7 +72,24 @@ const attivitaPerUso={
 };
 function aggiornaAttivita(){const sel=$('evento'),uso=Number($('funzione').value);const vals=attivitaPerUso[uso];sel.innerHTML=vals?vals.map((v,i)=>`<option value="${i}">${esc(v)}</option>`).join(''):'<option value="">Seleziona prima la destinazione d’uso</option>';sel.disabled=!vals}
 aggiornaAttivita();
-['funzione','durata','clima','sistema','materiale'].forEach(k=>$(k).onchange=e=>{criteria[k]=Number(e.target.value);if(k==='funzione')aggiornaAttivita()});
+const stimaMsg=$('stimaSuperficie'),inputUtenti=$('utenti'),inputSup=$('superficie');
+let superficieManuale=false;
+function aggiornaStima(){
+ const uso=Number($('funzione').value),att=$('evento').selectedIndex,n=Number(inputUtenti.value);
+ if(uso===4&&att===1&&n>0){
+  const val=Math.round(n*1.8*10)/10;
+  stimaMsg.innerHTML='Riferimento: D.M. 18/12/1975, tab. 7, attività didattiche normali della scuola media: 1,80 m²/alunno di superficie netta dedicata alla didattica. Non comprende tutti gli altri spazi. <a href="https://www.inu.it/wp-content/uploads/DM_18_12_1975_edilizia.pdf" target="_blank" rel="noopener noreferrer">Fonte normativa ↗</a>';
+  if(!superficieManuale)inputSup.value=val;
+ }else{
+  stimaMsg.textContent='Per questa attività non è applicato automaticamente un coefficiente: gli indici di affollamento o gli standard di altre destinazioni non equivalgono necessariamente alla superficie progettuale. Inserisci i m² manualmente.';
+  if(!superficieManuale)inputSup.value='';
+ }
+}
+inputSup.addEventListener('input',()=>{superficieManuale=true});
+inputUtenti.addEventListener('input',()=>{superficieManuale=false;aggiornaStima()});
+$('evento').addEventListener('change',()=>{superficieManuale=false;aggiornaStima()});
+aggiornaStima();
+['funzione','durata','clima','sistema','materiale'].forEach(k=>$(k).onchange=e=>{criteria[k]=Number(e.target.value);if(k==='funzione'){aggiornaAttivita();superficieManuale=false;aggiornaStima()}});
 $('applyGuided').onclick=()=>solutionResults();
 $('resetGuided').onclick=()=>{Object.keys(criteria).forEach(k=>criteria[k]=0);guided()};
 solutionResults()}
