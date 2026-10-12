@@ -65,10 +65,10 @@ ${guidedField('materiale','Materiale prevalente',['Non ancora definito',...choic
 </div><div class="toolbar"><button class="primary" id="applyGuided">Confronta le alternative</button><button class="secondary" id="resetGuided">Azzera i criteri</button></div>
 <div class="count" id="solutionCount" role="status"></div><div class="solution-list" id="solutionCards"></div>`;
 const attivitaPerUso={
-1:['Non ancora definita','Esposizione / mostra / Expo','Vendita / retail','Hospitality / promozione','Padiglione culturale o istituzionale','Esperienza immersiva / attività creativa'],
-2:['Non ancora definita','Festival','Concerto / spettacolo / performance','Conferenza / congresso / talk','Evento corporate','Attività sportiva','Spazio pubblico per eventi','Info point / servizi per eventi'],
-3:['Non ancora definita','Alloggio emergenziale','Rifugio temporaneo / transitorio','Accoglienza per rifugiati o sfollati','Alloggio temporaneo','Rifugio con servizi'],
-4:['Non ancora definita','Scuola / didattica','Workshop / educazione','Installazione artistica o culturale','Mostra / lecture','Spazio sociale o per studenti','Padiglione di ricerca','Spazio religioso temporaneo']
+1:['Non ancora definita','Esposizione / mostra','Vendita / retail','Hospitality / promozione','Padiglione istituzionale'],
+2:['Non ancora definita','Festival / spettacolo / performance','Conferenza / congresso','Attività sportiva','Evento pubblico / corporate'],
+3:['Non ancora definita','Emergenza / accoglienza','Rifugio temporaneo','Alloggio temporaneo'],
+4:['Non ancora definita','Didattica / formazione','Arte / cultura','Ricerca / sperimentazione','Spazio sociale']
 };
 function aggiornaAttivita(){const sel=$('evento'),uso=Number($('funzione').value);const vals=attivitaPerUso[uso];sel.innerHTML=vals?vals.map((v,i)=>`<option value="${i}">${esc(v)}</option>`).join(''):'<option value="">Seleziona prima la destinazione d’uso</option>';sel.disabled=!vals}
 aggiornaAttivita();
