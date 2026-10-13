@@ -10,13 +10,14 @@
   let r=byId('S03');
   if(r) r[32]='https://www.sciencedirect.com/science/article/pii/S2352710223012767';
 
-  // S04: Little Finlandia è P3 e non costituisce evidenza diretta per una famiglia P4 volumetrica.
+  // S04: Puuinfo documenta esplicitamente elementi volumetrici lignei (P4).
+  // Il caso è riferimento diretto tipologico; i punteggi prestazionali non verificati restano n.d.
   r=byId('S04');
   if(r){
-    r[31]='Nessun caso diretto nel campione';
-    r[32]='n.d.';
+    r[31]='25 – Pikku-Finlandia / Little Finlandia';
+    r[32]='https://puuinfo.fi/arkkitehtuuri/public-buildings/pikku-finlandia/?lang=en';
     ndCompat(r);
-    r[33]='Famiglia progettuale mantenuta come opzione tipologica, ma non valutata quantitativamente: nel campione non è presente un caso diretto P4 volumetrico in legno. Little Finlandia è classificato P3 e non viene usato come evidenza per questa famiglia.';
+    r[33]='Riferimento tipologico diretto: Puuinfo descrive la costruzione con elementi volumetrici lignei e il loro montaggio a partire da giugno 2021. Il caso 25 è riclassificato P4. La documentazione dell’unità volumetrica non convalida automaticamente le compatibilità prestazionali 1–3 della famiglia, mantenute n.d. in attesa di verifica.';
   }
 
   // S07: nessun caso diretto nel campione = nessun punteggio di compatibilità attribuito.
@@ -38,6 +39,12 @@
   if(c){ c[15]='n.d.'; c[29]='n.d.'; }
   c=row(40); // Permanently Temporary Pavilion
   if(c){ c[15]='G1'; c[29]=3; }
+
+  // Caso 25: allineamento tra abaco e matrice dei casi filtrabili.
+  const p25=F.abaco.find(x=>Number(x[0])===25);
+  const f25=F.filterable.find(x=>Number(x[0])===25);
+  if(p25) p25[17]='P4 – preassemblaggio volumetrico (3D)';
+  if(f25) f25[17]='P4 – preassemblaggio volumetrico (3D)';
 
   // Classi di durata non sovrapposte: il valore 6 mesi resta nella classe stagionale.
   F.filterable.forEach(c=>{ if(c[26]==='Medio 6–24 mesi') c[26]='Medio >6–<24 mesi'; });
