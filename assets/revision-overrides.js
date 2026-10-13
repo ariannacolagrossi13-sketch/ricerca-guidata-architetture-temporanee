@@ -68,6 +68,12 @@
   c=row(40); // Permanently Temporary Pavilion
   if(c){ c[15]='G1'; c[29]=3; }
 
+  // Caso 25: superficie corretta secondo Metsä Wood: circa 2.000 m².
+  const c25a=F.abaco.find(x=>Number(x[0])===25);
+  const c25f=F.filterable.find(x=>Number(x[0])===25);
+  if(c25a) c25a[9]='≈ 2.000 m²';
+  if(c25f) c25f[9]='≈ 2.000 m²';
+
   // Caso 25: allineamento tra abaco e matrice dei casi filtrabili.
   const p25=F.abaco.find(x=>Number(x[0])===25);
   const f25=F.filterable.find(x=>Number(x[0])===25);
