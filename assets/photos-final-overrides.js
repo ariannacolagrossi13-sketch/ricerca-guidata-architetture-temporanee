@@ -14,4 +14,7 @@
   // Nuovi casi dell'Abaco finale.
   p[25]="https://cdn.ark.fi/20220517155428/pikkufinlandia_53a9348__photo_mikael_linden-scaled.jpg";
   p[33]="https://i1.wp.com/designlikeyougiveadamn.com/wp-content/uploads/sites/38286/2023/08/GVS-village2-prnt-1024x768.jpg?ssl=1";
+  // Foto BUGA Wood Pavilion a Heilbronn (2019), Wikimedia Commons,
+  // Joachim Köhler, CC BY-SA 4.0.
+  p[46]="https://commons.wikimedia.org/wiki/Special:Redirect/file/BUGA-HN-2019-I0935-18-06-2019-1720.jpg";
 })();
