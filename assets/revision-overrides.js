@@ -45,9 +45,19 @@
   // Caso 46: sostituzione Zero Gravity Pavilion con BUGA Wood Pavilion.
   // I valori normalizzati rispettano le opzioni già previste dalla matrice.
   const bugaAbaco=[46,"Arte e istruzione","BUGA Wood Pavilion","ICD / ITKE – Università di Stoccarda",2019,"Heilbronn, Germania","Cfb+temperato","Padiglione sperimentale per concerti ed eventi pubblici","3 anni e 8 mesi","≃ 500 m²- s.coperta","Guscio ligneo segmentato a doppia curvatura","Legno ingegnerizzato (lamellare, CLT, LVL, compensato)","Aperto, coperto, con tre grandi aperture ad arco","Cassette lignee; membrana EPDM; rivestimento in larice","Guscio ligneo con membrana impermeabilizzante","Giunti a dita (finger joints) e bulloni rimovibili; giunzioni avvitate in alcuni archi","Fondazioni in calcestruzzo con elementi metallici di collegamento","P3 – preassemblaggio non volumetrico (2D)","Cassette lignee prefabbricate trasportate su autocarro","Assemblaggio del guscio in 10 giorni lavorativi","Smontato nel 2022 e rimontato nel 2023; 376 cassette riutilizzate","Leggerezza strutturale, prefabbricazione, riuso effettivo dei componenti","R2","Documentato","Alta","https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-2019/"];
-  const bugaFiltrabile=[46,"Arte e istruzione","BUGA Wood Pavilion","ICD / ITKE – Università di Stoccarda",2019,"Heilbronn, Germania","Cfb+temperato","Padiglione sperimentale per concerti ed eventi pubblici","3 anni e 8 mesi","≃ 500 m²- s.coperta","Gridshell","Legno ingegnerizzato (lamellare, CLT, LVL, compensato)","Aperto","Legno ingegnerizzato (lamellare, CLT, LVL, compensato) + Membrane","Membrana","G1","FP","P3 – preassemblaggio non volumetrico (2D)","Cassette lignee prefabbricate trasportate su autocarro","Assemblaggio del guscio in 10 giorni lavorativi","Smontato nel 2022 e rimontato nel 2023; 376 cassette riutilizzate","Leggerezza strutturale, prefabbricazione, riuso effettivo dei componenti","R2","Documentato","Alta","https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-2019/","Pluriennale 2–10 anni","Media 50–500 m²",30,3,"T3","M5",2,"BUGA Wood Pavilion"];
+  const bugaFiltrabile=[46,"Arte e istruzione","BUGA Wood Pavilion","ICD / ITKE – Università di Stoccarda",2019,"Heilbronn, Germania","Cfb+temperato","Padiglione sperimentale per concerti ed eventi pubblici","3 anni e 8 mesi","≃ 500 m²- s.coperta","Gridshell","Legno ingegnerizzato (lamellare, CLT, LVL, compensato)","Aperto","Legno ingegnerizzato (lamellare, CLT, LVL, compensato) + Membrane","Membrana","G1","FP","P3 – preassemblaggio non volumetrico (2D)","Cassette lignee prefabbricate trasportate su autocarro","Assemblaggio del guscio in 10 giorni lavorativi","Smontato nel 2022 e rimontato nel 2023; 376 cassette riutilizzate","Leggerezza strutturale, prefabbricazione, riuso effettivo dei componenti","R2","Documentato","Alta","https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-2019/","Pluriennale 2–10 anni","Media 50–500 m²",30,3,"T3","M5","n.d.","BUGA Wood Pavilion"];
   const i46=F.abaco.findIndex(x=>Number(x[0])===46);
   const f46=F.filterable.findIndex(x=>Number(x[0])===46);
   if(i46>=0) F.abaco[i46]=bugaAbaco;
   if(f46>=0) F.filterable[f46]=bugaFiltrabile;
+
+  // Allineamento casi 39 e 42 con Abaco e matrice verificati.
+  let a39=F.abaco.find(x=>Number(x[0])===39), f39=F.filterable.find(x=>Number(x[0])===39);
+  if(a39){ a39[4]=2019; a39[8]='4 settimane'; }
+  if(f39){ f39[4]=2019; f39[8]='4 settimane'; f39[26]='Breve < 1 mese'; f39[33]='Arte e istruzione; Cfb+temperato; Breve < 1 mese; Struttura reciproca; Legno massiccio'; }
+
+  let a42=F.abaco.find(x=>Number(x[0])===42), f42=F.filterable.find(x=>Number(x[0])===42);
+  const p42='Steven J. Preston (studente di ingegneria), con Lawrence C. Bank – University of Wisconsin–Madison';
+  if(a42){ a42[3]=p42; a42[5]='Madison, Wisconsin, USA'; a42[6]='Dfa+continentale umido'; a42[8]='14 giorni'; }
+  if(f42){ f42[3]=p42; f42[5]='Madison, Wisconsin, USA'; f42[6]='Dfa+continentale umido'; f42[8]='14 giorni'; f42[26]='Breve < 1 mese'; f42[33]='Arte e istruzione; Dfa+continentale umido; Breve < 1 mese; Reticolare / truss; Carta e cartone'; }
 })();
