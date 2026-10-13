@@ -109,6 +109,13 @@
 
 
   setCase(42,{9:'Tubi di carta lunghi 16,15 m (53 ft) prima della curvatura; non è la luce libera'});
+  // Casi 2–4: superfici approvate e allineate a matrice/abaco.
+  setCase(2,{9:'≃ 1.000 m²- s.coperta'});
+  setCase(3,{9:'1.115 m²'});
+  setCase(4,{9:'≃ 3.090 m²- s.coperta'});
+  let sf=F.filterable.find(x=>Number(x[0])===2);if(sf){sf[11]='≃ 1.000 m²- s.coperta';sf[30]='Grande 500–5.000 m²';}
+  sf=F.filterable.find(x=>Number(x[0])===3);if(sf){sf[11]='1.115 m²';sf[30]='Grande 500–5.000 m²';}
+  sf=F.filterable.find(x=>Number(x[0])===4);if(sf){sf[11]='≃ 3.090 m²- s.coperta';sf[30]='Grande 500–5.000 m²';}
   // Sincronizzazione definitiva approvata: casi e S04.
   setCase(12,{8:'4 anni'});
   setCase(25,{17:'P4 – preassemblaggio volumetrico (3D)'});
