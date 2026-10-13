@@ -33,6 +33,17 @@
     r[33]='Famiglia progettuale mantenuta come riferimento tipologico, ma non valutata quantitativamente: il Japan Pavilion Expo 2000 è classificato nel campione come gridshell in tubi di carta con rinforzi lignei e non come gridshell lignea.';
   }
 
+
+  // Confini operativi delle famiglie: unità costruttiva prima di materiali e strategie.
+  const note=(id,extra)=>{const x=byId(id);if(x)x[33]=String(x[33]||'')+' | Delimitazione metodologica: '+extra;};
+  note('S05','Kit ligneo piano flat-pack con pannelli assemblati in opera; la famiglia non presuppone pannelli CLT. Non trasferire automaticamente prestazioni di un pannello CLT.');
+  note('S16','Sistema con pannelli portanti CLT e giunzioni reversibili; il materiale strutturale CLT distingue questa famiglia dal flat-pack ligneo generico S05. Reversibilità effettiva e connessioni richiedono verifica specifica.');
+  note('S03','Modulo volumetrico tridimensionale in acciaio fabbricato come unità edilizia; non coincide per definizione con un container ISO riconfigurato.');
+  note('S15','Container ISO riconfigurato: il container standardizzato è l’unità primaria, a differenza del modulo volumetrico in acciaio progettato ad hoc di S03.');
+  note('S13','Il riuso è una strategia trasversale applicabile anche alle altre famiglie. S13 resta provvisoriamente nel catalogo come configurazione ibrida da componenti eterogenei recuperati, non come sistema strutturale omogeneo; non confrontare i suoi punteggi con famiglie omogenee prima della revisione.');
+  note('S11','Sottotipo S11a: Paper Log House, pareti in tubi di carta; sottotipo S11b: Japan Pavilion Hannover, gridshell di tubi di carta. Grandi luci, involucro, giunti e condizioni d’impiego di S11b non sono trasferibili a S11a. I punteggi generali della famiglia richiedono revisione per sottotipo.');
+  const s11=byId('S11');if(s11){s11[14]='n.d.';s11[16]='n.d.';s11[17]='n.d.';s11[18]='n.d.';s11[19]='n.d.';}
+  const s13=byId('S13');if(s13){for(let j=16;j<=28;j++)s13[j]='n.d.';}
   // Correzioni puntuali dei casi filtrabili: non attribuire G/reversibilità contro l’evidenza dell’abaco.
   const row=id=>F.filterable.find(x=>String(x[0])===String(id));
   let c=row(37); // Hiyoshi Pavilion
