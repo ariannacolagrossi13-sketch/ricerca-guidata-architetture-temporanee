@@ -29,8 +29,6 @@ const DATA={"caseHeaders":["ID","Categoria","Progetto","Autore/ente","Anno","Loc
  DATA.filterHeaders=F.filter_headers; DATA.filterable=[F.filter_headers,...F.filterable]; DATA.filterVisible=F.filter_headers.map((_,i)=>i);
  DATA.caseEvidence=[];
 })();
-// S16: sistema pannellizzato CLT = P3 (preassemblaggio non volumetrico 2D), non P4 volumetrico.
-(function(){const s16=DATA.solutions.find(r=>String(r[0])==='S16');if(s16){s16[7]='3';}})();
 // S13 mantiene integralmente i valori della matrice: nessun azzeramento artificiale dei criteri.
 
 
