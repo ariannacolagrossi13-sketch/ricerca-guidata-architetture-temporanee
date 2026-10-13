@@ -90,7 +90,12 @@ function ranked(){return S.map((r,i)=>{
 const stagioniCasi=["Più stagioni","Estate","Più stagioni","Più stagioni","Primavera","Autunno","Più stagioni","Più stagioni","Più stagioni","Più stagioni","Estate","Più stagioni","Più stagioni","Più stagioni","Autunno","Estate","Estate","Estate","Più stagioni","Più stagioni","Estate","Più stagioni","Più stagioni","Estate","Più stagioni","Più stagioni","Più stagioni","Più stagioni","Più stagioni","Più stagioni","n.d.","n.d.","Più stagioni","Più stagioni","n.d.","Più stagioni","Primavera","Più stagioni","Estate","Primavera","Estate","Estate","Più stagioni","Estate","Primavera","Più stagioni"];
 const configurazioneCasi=['Aperto','Chiuso','Chiuso','Chiuso','Aperto','Aperto','Aperto','Chiuso','Chiuso','Chiuso','Aperto','Aperto','Aperto','Aperto','Chiuso','Aperto','Aperto','Aperto','Chiuso','Aperto','Aperto','Chiuso','Aperto','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Chiuso','Aperto','Aperto','Aperto','Aperto','Aperto','Aperto','Aperto','Chiuso','Aperto','Aperto'];
 function directEvidence(r){const raw=String(r[31]||'').trim();if(!raw||raw==='n.d.'||raw.toLowerCase().includes('nessun caso diretto'))return {count:0,label:'Nessun caso diretto nel campione'};const refs=raw.split(';').map(x=>x.trim()).filter(Boolean);const n=refs.length;return {count:n,label:n===1?'1 caso diretto nel campione':n+' casi diretti nel campione'};}
-function evidenceStrength(r){const ev=directEvidence(r);return {...ev,strength:ev.count>=3?'Alta':ev.count===2?'Media':ev.count===1?'Bassa':'Non determinabile'};}
+function evidenceStrength(r){
+ const ev=directEvidence(r),raw=String(r[34]||'').trim().toLowerCase();
+ // La numerosità dei casi diretti è informativa ma non determina da sola la qualità dell'evidenza.
+ const strength=/\balta\b/.test(raw)?'Alta':/\bmedia\b/.test(raw)?'Media':/\bbassa\b/.test(raw)?'Bassa':'Non determinabile';
+ return {...ev,strength};
+}
 function solutionResults(){
  const all=ranked(),nonEvaluableIds=new Set(['S07','S10','S13']),evaluable=all.filter(x=>!nonEvaluableIds.has(String(x.r[0]))),pending=all.filter(x=>nonEvaluableIds.has(String(x.r[0])));
  const conform=evaluable.filter(x=>!x.failures.length),excluded=evaluable.filter(x=>x.failures.length);
