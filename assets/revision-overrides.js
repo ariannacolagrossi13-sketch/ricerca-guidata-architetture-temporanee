@@ -110,19 +110,19 @@
 
   // Sincronizzazione definitiva approvata: casi e S04.
   setCase(12,{8:'4 anni'});
-  setCase(25,{17:'P3 – preassemblaggio non volumetrico (2D)'});
+  setCase(25,{17:'P4 – preassemblaggio volumetrico (3D)'});
   setCase(26,{8:'n.d.',9:'≃  18 m²- s.coperta'});
   setCase(42,{3:'Steven J. Preston (studente di ingegneria), con Lawrence C. Bank – University of Wisconsin–Madison',5:'Madison, Wisconsin, USA',6:'Dfa+continentale umido'});
   setCase(44,{10:'Sistema pannellizzato CLT',17:'P3 – preassemblaggio non volumetrico (2D)'});
   setCase(46,{2:'BUGA Wood Pavilion',3:'ICD / ITKE – Università di Stoccarda',4:2019,5:'Heilbronn, Germania',6:'Cfb+temperato',7:'Padiglione sperimentale per concerti ed eventi pubblici',8:'3 anni e 8 mesi',9:'≃ 500 m²- s.coperta',10:'Guscio ligneo segmentato con 376 cassette prefabbricate e giunti a incastro/bullonati',11:'Legno ingegnerizzato (lamellare, CLT, LVL, compensato)',12:'Filtro (mesh, schermature)',13:'Legno ingegnerizzato (lamellare, CLT, LVL, compensato) + Membrane',14:'Pannelli leggeri',15:'G1',16:'A',17:'P2 – Kit di componenti su misura',18:'Componenti modulari',19:'Prima costruzione: 10 giorni lavorativi per montare i segmenti prefabbricati; ricostruzione 2023: 12 giorni lavorativi per struttura portante',20:'Smontato a fine 2022 e ricostruito a Mannheim nel 2023: riutilizzate 376 cassette, 107 parti metalliche e circa 90% dei bulloni; pannelli di facciata sostituiti',21:'Riduzione e riuso materiali',22:'R2/R3',23:'Rimontaggio documentato a Mannheim nel 2023; riuso parziale degli strati di facciata',24:'Alta',25:'https://www.mdpi.com/2075-5309/15/11/1857; https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-reuse-2023/'});
   const ff=id=>F.filterable.find(x=>Number(x[0])===id);
   let z=ff(12);if(z){z[8]='4 anni';z[26]='Pluriennale 2–10 anni';}
-  z=ff(25);if(z)z[17]='P3 – preassemblaggio non volumetrico (2D)';
+  z=ff(25);if(z)z[17]='P4 – preassemblaggio volumetrico (3D)';
   z=ff(26);if(z){z[8]='n.d.';z[9]='≃  18 m²- s.coperta';z[26]='n.d.';z[27]='Piccola < 50 m²';}
   z=ff(42);if(z){z[3]='Steven J. Preston (studente di ingegneria), con Lawrence C. Bank – University of Wisconsin–Madison';z[5]='Madison, Wisconsin, USA';z[6]='Dfa+continentale umido';}
   z=ff(44);if(z){z[10]='Pannelli portanti 2D';z[17]='P3 – preassemblaggio non volumetrico (2D)';}
   z=ff(46);if(z){z[2]='BUGA Wood Pavilion';z[3]='ICD / ITKE – Università di Stoccarda';z[4]=2019;z[5]='Heilbronn, Germania';z[6]='Cfb+temperato';z[7]='Padiglione sperimentale per concerti ed eventi pubblici';z[8]='3 anni e 8 mesi';z[9]='≃ 500 m²- s.coperta';z[10]='Guscio ligneo segmentato';z[11]='Legno ingegnerizzato (lamellare, CLT, LVL, compensato)';z[12]='Filtro (mesh, schermature)';z[13]='Legno ingegnerizzato (lamellare, CLT, LVL, compensato) + Membrane';z[14]='Pannelli leggeri';z[15]='G1';z[16]='A';z[17]='P2 – Kit di componenti su misura';z[18]='Componenti modulari';z[19]='Prima costruzione: 10 giorni lavorativi; ricostruzione 2023: 12 giorni lavorativi per la struttura portante';z[20]='Smontato a fine 2022 e ricostruito a Mannheim nel 2023; riuso documentato di componenti';z[21]='Riduzione e riuso materiali';z[22]='R2/R3';z[23]='Rimontaggio documentato a Mannheim nel 2023; riuso parziale degli strati di facciata';z[24]='Alta';z[25]='https://www.mdpi.com/2075-5309/15/11/1857; https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-reuse-2023/';z[26]='Pluriennale 2–10 anni';z[27]='Media 50–500 m²';z[33]='Arte e istruzione; Cfb+temperato; Pluriennale 2–10 anni; Guscio ligneo segmentato; Legno ingegnerizzato (lamellare, CLT, LVL, compensato)';}
   if(F.activitySpecific)F.activitySpecific[46]='Concerti ed eventi';
-  r=byId('S04');if(r){for(let j=16;j<=28;j++)r[j]='n.d.';r[31]='Nessun caso diretto nel campione';r[32]='n.d.';r[33]='Famiglia tipologica consultabile fuori graduatoria: Little Finlandia è P3 e Fuggerei NEXT500 è un sistema pannellizzato CLT P3; nessuno dei due sostiene S04 come modulo volumetrico 3D in legno.';}
+  r=byId('S04');if(r){for(let j=16;j<=28;j++)r[j]='n.d.';r[31]='25 – Pikku-Finlandia / Little Finlandia';r[32]='https://puuinfo.fi/wp-content/uploads/2022/05/Puu_2_22_koko_lehti_low.pdf';r[33]='Caso diretto P4: Puuinfo documenta elementi volumetrici lignei prefabbricati. S04 è una famiglia valutabile; le compatibilità non verificate restano n.d. Fuggerei NEXT500 rimane P3 e non sostiene S04.';}
 
 })();
