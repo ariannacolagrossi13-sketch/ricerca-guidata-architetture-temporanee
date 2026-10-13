@@ -31,29 +31,6 @@ const DATA={"caseHeaders":["ID","Categoria","Progetto","Autore/ente","Anno","Loc
 })();
 // S13 mantiene integralmente i valori della matrice: nessun azzeramento artificiale dei criteri.
 
-// Controllo documentale famiglie: note e riferimenti senza alterare i giudizi 1–3 non ancora verificati.
-(function(){
- const byId=id=>DATA.solutions.find(r=>String(r[0])===id);
- const s04=byId('S04');if(s04){
-  s04[31]='Nessun caso volumetrico 3D ligneo diretto sufficientemente coerente verificato nel campione';
-  s04[33]='Famiglia tipologica da validare: Fuggerei NEXT500 è pannellizzato CLT, non modulo volumetrico 3D. Non trasferire a S04 le prestazioni osservate per S16.';
- }
- const s09=byId('S09');if(s09){
-  s09[31]='20 – ZCB Bamboo Pavilion';
-  s09[32]='https://link.springer.com/article/10.1186/s40327-017-0051-4';
-  s09[33]='Gridshell in bambù documentata da ZCB. Blue Ocean Dome non è caso diretto di gridshell in bambù: le strutture descritte sono in CFRP e tubi di carta.';
- }
- const s13=byId('S13');if(s13){
-  s13[31]='15 – People’s Pavilion; 40 – Permanently Temporary Pavilion';
-  s13[32]='https://www.arup.com/en-us/projects/peoples-pavilion/';
-  s13[33]='Kit-of-parts con componenti recuperati o presi in prestito. Arup documenta restituzione e ulteriore riuso di molti componenti del People’s Pavilion; materiali e prestazioni dipendono dai pezzi effettivamente disponibili.';
- }
- const s16=byId('S16');if(s16){
-  s16[31]='44 – Fuggerei NEXT500 Pavilion; 7 – Italian Pavilion Expo 2025 (riuso previsto, esito da verificare)';
-  s16[32]='https://www.mvrdv.com/projects/472/fuggerei-next500-pavilion';
-  s16[33]='Fuggerei documenta pannelli CLT prefabbricati e smontabili; trasferimento annunciato, ricostruzione finale da verificare. Non confondere con moduli volumetrici 3D.';
- }
-})();
 
 const setLegend=(name,text)=>{const row=DATA.legend.find(r=>r[0]===name);if(row)row[1]=text;else DATA.legend.push([name,text])};
 setLegend('Regola n.d.','n.d. = parametro applicabile ma dato non disponibile o non determinabile con sufficiente evidenza; non si introduce un valore per inferenza. N/A = parametro non applicabile al caso.');
@@ -120,12 +97,12 @@ function evidenceStrength(r){
  return {...ev,status:ev.count?'Documentazione diretta presente':'Nessun caso diretto nel campione'};
 }
 function solutionResults(){
- const all=ranked(),nonEvaluableIds=new Set(['S04','S07','S10']),evaluable=all.filter(x=>!nonEvaluableIds.has(String(x.r[0]))),pending=all.filter(x=>nonEvaluableIds.has(String(x.r[0])));
+ const all=ranked(),nonEvaluableIds=new Set(['S07','S10']),evaluable=all.filter(x=>!nonEvaluableIds.has(String(x.r[0]))),pending=all.filter(x=>nonEvaluableIds.has(String(x.r[0])));
  const conform=evaluable.filter(x=>!x.failures.length),excluded=evaluable.filter(x=>x.failures.length);
  const active=Object.values(criteria).some(Boolean)||multiCriteria.trasporto.length||multiCriteria.montaggio||multiCriteria.sistema.length||multiCriteria.materiale.length||multiCriteria.prefabbricazione||multiCriteria.rapidita||multiCriteria.suolo||multiCriteria.scenario.length;
  const card=(x,alternative=false)=>{const {r,i,failures,unknowns,groundStatus,coverage,evaluatedCount,requestedCount,pref}=x,ev=evidenceStrength(r),prefEvaluated=pref.filter(p=>p.value!==null).map(p=>p.label),prefMissing=pref.filter(p=>p.value===null).map(p=>p.label);const status=alternative?'Esclusa dai requisiti necessari':unknowns.length?'Da verificare':'Alternativa compatibile',statusClass=alternative?'status-excluded':unknowns.length?'status-verify':'status-compatible';return `<article class="card"><div class="solution-top"><div><span class="muted">${esc(r[0])} · ${esc(r[2])}</span><h3>${esc(r[1])}</h3></div><span class="tag ${statusClass}">${esc(status)}</span></div><p class="meta">${esc(r[3])} · Trasporto ${esc(r[8])} · Montaggio ${esc(r[10])}</p><div class="metrics"><div><b>Preferenze valutate <span class="info-tip" tabindex="0" role="button" aria-label="Informazioni sulle preferenze valutate">ⓘ<span class="info-pop">Indica quali criteri di preferenza selezionati dall’utente possiedono un dato valutabile per questa famiglia. Non comprende i requisiti necessari, come trasporto e mezzo massimo di montaggio.</span></span></b>${requestedCount?evaluatedCount+'/'+requestedCount:'Nessuna'}${prefEvaluated.length?' · '+esc(prefEvaluated.join(', ')):''}${prefMissing.length?' · da verificare: '+esc(prefMissing.join(', ')):''}</div><div><b>Copertura delle preferenze <span class="info-tip" tabindex="0" role="button" aria-label="Informazioni sulla copertura delle preferenze">ⓘ<span class="info-pop">È la quota dei criteri di preferenza richiesti che può essere effettivamente valutata con i dati disponibili. Non è una percentuale di idoneità o compatibilità della soluzione.</span></span></b>${coverage===null?'n.d.':coverage+'%'} · indica solo quanti criteri richiesti hanno un dato valutabile</div><div><b>Evidenza documentale <span class="info-tip" tabindex="0" role="button" aria-label="Informazioni sull'evidenza documentale">ⓘ<span class="info-pop">Segnala se la famiglia è sostenuta da casi studio diretti nel campione e quanti sono. Descrive la base documentale del confronto, non la qualità progettuale della soluzione.</span></span></b>${esc(ev.status)} · ${esc(ev.label)}</div><div><b>Reversibilità documentata <span class="info-tip" tabindex="0" role="button" aria-label="Informazioni sulla reversibilità documentata">ⓘ<span class="info-pop">Indicatore 1–3 della matrice relativo alla possibilità documentata di smontare, separare e potenzialmente riutilizzare il sistema o i suoi componenti. Non dimostra da solo che il riuso sia realmente avvenuto.</span></span></b>${esc(r[12])}/3</div></div>${failures.length?`<p><strong>Requisiti necessari incompatibili:</strong> ${failures.map(y=>esc(y.label)+' — richiesto '+esc(y.expected)+', famiglia '+esc(y.actual)).join('; ')}.</p>`:''}${unknowns.length?`<p><strong>Requisiti necessari da verificare:</strong> ${unknowns.map(y=>esc(y.label)).join(', ')}. Il dato mancante non è trattato come incompatibilità.</p>`:''}${multiCriteria.suolo?`<p><strong>Suolo (preferenza descrittiva):</strong> ${groundStatus==='match'?'tipologia documentata coincidente':groundStatus==='unknown'?'n.d. — da verificare':'tipologia documentata diversa; adattamento da verificare'}.</p>`:''}<p><strong>Adattamenti / limiti:</strong> ${esc(r[33])}</p><button class="secondary" data-sol="${i}">Dettagli, fonti e caso di riferimento →</button></article>`;};
  $('solutionCount').textContent=`${conform.length} famiglie senza incompatibilità nei requisiti necessari · ${excluded.length} escluse · ${pending.length} voci fuori graduatoria`;
- const pendingStatus=id=>'Riferimento tipologico senza caso diretto verificato';
+ const pendingStatus=id=>'Riferimento tipologico senza caso diretto';
  const pendingText=id=>'Senza un caso diretto sufficientemente coerente nel campione, la famiglia resta consultabile ma non viene ordinata con le alternative documentate.';
  const pendingCards=pending.map(x=>`<article class="card"><div class="solution-top"><div><span class="muted">${esc(x.r[0])} · ${esc(x.r[2])}</span><h3>${esc(x.r[1])}</h3></div><span class="tag status-pending">${esc(pendingStatus(String(x.r[0])))}</span></div><p>${esc(pendingText(String(x.r[0])))}</p><p>${esc(x.r[33])}</p><button class="secondary" data-sol="${x.i}">Dettagli e riferimenti →</button></article>`).join('');
  $('solutionCards').innerHTML=active?`<p class="notice"><strong>Come leggere i risultati.</strong> I requisiti necessari possono escludere una famiglia solo quando l’incompatibilità è documentata; un dato mancante resta “da verificare”. Le preferenze ordinano internamente le alternative con Coerente=2, Adattabile=1, Incompatibile=0. L’indice interno non è mostrato come percentuale di idoneità. La percentuale visibile indica esclusivamente la copertura dei criteri valutabili.</p><h3>Alternative raccomandabili</h3>${conform.slice(0,3).map(x=>card(x)).join('')||'<div class="empty">Nessuna famiglia soddisfa i requisiti necessari documentati.</div>'}<h3>Alternative escluse dai requisiti necessari</h3>${excluded.slice(0,3).map(x=>card(x,true)).join('')||'<p class="muted">Nessuna esclusione documentata con i requisiti impostati.</p>'}<h3>Voci consultabili fuori graduatoria</h3>${pendingCards}`:`<p class="muted">Seleziona i criteri per avviare il confronto. Nessuna percentuale di idoneità viene attribuita in assenza di criteri.</p>${conform.map(x=>card(x)).join('')}<h3>Voci consultabili fuori graduatoria</h3>${pendingCards}`;
