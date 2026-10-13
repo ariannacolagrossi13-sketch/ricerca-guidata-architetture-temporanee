@@ -17,7 +17,7 @@
     r[31]='25 – Pikku-Finlandia / Little Finlandia';
     r[32]='https://puuinfo.fi/arkkitehtuuri/public-buildings/pikku-finlandia/?lang=en';
     ndCompat(r);
-    r[33]='Riferimento tipologico diretto: Puuinfo descrive la costruzione con elementi volumetrici lignei e il loro montaggio a partire da giugno 2021. Il caso 25 è riclassificato P4. La documentazione dell’unità volumetrica non convalida automaticamente le compatibilità prestazionali 1–3 della famiglia, mantenute n.d. in attesa di verifica.';
+    r[33]='Riferimento tipologico diretto: Puuinfo descrive la costruzione con elementi volumetrici lignei e il loro montaggio a partire da giugno 2021. Il caso 25 è riclassificato P4. S04 partecipa alla ricerca guidata; le compatibilità prestazionali non documentate restano n.d. e non vengono inventate.';
   }
 
   // S07: nessun caso diretto nel campione = nessun punteggio di compatibilità attribuito.
@@ -40,10 +40,27 @@
   note('S16','Sistema con pannelli portanti CLT e giunzioni reversibili; il materiale strutturale CLT distingue questa famiglia dal flat-pack ligneo generico S05. Reversibilità effettiva e connessioni richiedono verifica specifica.');
   note('S03','Modulo volumetrico tridimensionale in acciaio fabbricato come unità edilizia; non coincide per definizione con un container ISO riconfigurato.');
   note('S15','Container ISO riconfigurato: il container standardizzato è l’unità primaria, a differenza del modulo volumetrico in acciaio progettato ad hoc di S03.');
-  note('S13','Il riuso è una strategia trasversale applicabile anche alle altre famiglie. S13 resta provvisoriamente nel catalogo come configurazione ibrida da componenti eterogenei recuperati, non come sistema strutturale omogeneo; non confrontare i suoi punteggi con famiglie omogenee prima della revisione.');
-  note('S11','Sottotipo S11a: Paper Log House, pareti in tubi di carta; sottotipo S11b: Japan Pavilion Hannover, gridshell di tubi di carta. Grandi luci, involucro, giunti e condizioni d’impiego di S11b non sono trasferibili a S11a. I punteggi generali della famiglia richiedono revisione per sottotipo.');
-  const s11=byId('S11');if(s11){s11[14]='n.d.';s11[16]='n.d.';s11[17]='n.d.';s11[18]='n.d.';s11[19]='n.d.';}
-  const s13=byId('S13');if(s13){for(let j=16;j<=28;j++)s13[j]='n.d.';}
+  // S11 viene articolata in due sottotipi tecnologicamente omogenei.
+  const s11=byId('S11');
+  if(s11){
+    const a=s11.slice(), b=s11.slice();
+    a[0]='S11a'; a[1]='Pareti/moduli in tubi di carta'; a[2]='Pareti a tubi o blocchi impilati'; a[8]='T1'; a[9]=1; a[10]='M2'; a[11]=2; a[14]=1;
+    a[31]='26 – Paper Log House Kobe; 27 – Paper Log House Turkey; 28 – Paper Log House India';
+    a[32]='https://shigeruban.net/works/paper-tubes/paper-log-house-kobe/';
+    a[33]='Sottotipo S11a: pareti/moduli in tubi di carta. Le prestazioni di grandi luci e la logistica della gridshell S11b non sono trasferibili a questo sottotipo.';
+    b[0]='S11b'; b[1]='Gridshell/reticolare in tubi di carta'; b[2]='Gridshell / reticolare'; b[8]='T3'; b[9]=3; b[10]='M4'; b[11]=4; b[14]=3;
+    b[31]='4 – Japan Pavilion Expo 2000 Hannover';
+    b[32]='https://www.sciencedirect.com/science/article/pii/S2352710222001486';
+    b[33]='Sottotipo S11b: gridshell/struttura reticolare in tubi di carta. Le prestazioni non sono trasferibili alle Paper Log House di S11a.';
+    const pos=S.indexOf(s11); S.splice(pos,1,a,b);
+  }
+  // S13 conserva il codice per continuità, ma è una strategia trasversale e non una famiglia concorrente.
+  const s13=byId('S13');if(s13){
+    s13[1]='Strategia trasversale di riuso di componenti';
+    s13[2]='Trasversale / applicabile a più sistemi';
+    for(let j=16;j<=28;j++)s13[j]='n.d.';
+    s13[33]='Strategia trasversale, non famiglia tecnologica omogenea: il riuso può essere applicato a più sistemi costruttivi. S13 resta codificata per continuità della tesi e per documentare i casi di riuso, ma non partecipa alla graduatoria tecnologica; nella ricerca guidata il riuso è intercettato dagli scenari di afterlife, in particolare R4.';
+  }
   // Correzioni puntuali dei casi filtrabili: non attribuire G/reversibilità contro l’evidenza dell’abaco.
   const row=id=>F.filterable.find(x=>String(x[0])===String(id));
   let c=row(37); // Hiyoshi Pavilion
