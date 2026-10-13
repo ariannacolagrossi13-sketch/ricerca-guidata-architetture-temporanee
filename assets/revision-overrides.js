@@ -77,16 +77,7 @@
   // Classi di durata non sovrapposte: il valore 6 mesi resta nella classe stagionale.
   F.filterable.forEach(c=>{ if(c[26]==='Medio 6–24 mesi') c[26]='Medio >6–<24 mesi'; });
 
-  // Caso 46: sostituzione Zero Gravity Pavilion con BUGA Wood Pavilion.
-  // I valori normalizzati rispettano le opzioni già previste dalla matrice.
-  const bugaAbaco=[46,"Arte e istruzione","BUGA Wood Pavilion","ICD / ITKE – Università di Stoccarda",2019,"Heilbronn, Germania","Cfb+temperato","Padiglione sperimentale per la Bundesgartenschau Heilbronn 2019 (BUGA 2019)","3 anni e 8 mesi","≃ 500 m²- s.coperta","Pannelli portanti 2D","Legno ingegnerizzato (lamellare, CLT, LVL, compensato)","Aperto, coperto, con tre grandi aperture ad arco","Legno massiccio + Membrane","Membrana","Giunti a dita (finger joints) e bulloni rimovibili; giunzioni avvitate in alcuni archi","Fondazioni in calcestruzzo con elementi metallici di collegamento","P3 – preassemblaggio non volumetrico (2D)","Elementi prefabbricati","Assemblaggio a secco","Smontato nel 2022 e rimontato nel 2023; 376 cassette riutilizzate","Leggerezza strutturale, prefabbricazione, riuso effettivo dei componenti","R2","Documentato","Alta","https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-2019/"];
-  const bugaFiltrabile=[46,"Arte e istruzione","BUGA Wood Pavilion","ICD / ITKE – Università di Stoccarda",2019,"Heilbronn, Germania","Cfb+temperato","Padiglione sperimentale per concerti ed eventi pubblici","3 anni e 8 mesi","≃ 500 m²- s.coperta","Pannelli portanti 2D","Legno ingegnerizzato (lamellare, CLT, LVL, compensato)","Aperto","Legno massiccio + Membrane","Membrana","G1","A","P3 – preassemblaggio non volumetrico (2D)","Cassette lignee prefabbricate trasportate su autocarro","Assemblaggio del guscio in 10 giorni lavorativi","Smontato nel 2022 e rimontato nel 2023; 376 cassette riutilizzate","Leggerezza strutturale, prefabbricazione, riuso effettivo dei componenti","R2","Documentato","Alta","https://www.icd.uni-stuttgart.de/projects/buga-wood-pavilion-2019/","Pluriennale 2–10 anni","Media 50–500 m²",30,3,"T3","M5","n.d.","BUGA Wood Pavilion"];
-  const i46=F.abaco.findIndex(x=>Number(x[0])===46);
-  const f46=F.filterable.findIndex(x=>Number(x[0])===46);
-  if(i46>=0) F.abaco[i46]=bugaAbaco;
-  if(f46>=0) F.filterable[f46]=bugaFiltrabile;
-
-  // Allineamento casi 39 e 42 con Abaco e matrice verificati.
+  // Caso 46: mantenuto come Zero Gravity Pavilion secondo l'abaco verificato; nessuna sostituzione con BUGA.\n\n  // Allineamento casi 39 e 42 con Abaco e matrice verificati.
   let a39=F.abaco.find(x=>Number(x[0])===39), f39=F.filterable.find(x=>Number(x[0])===39);
   if(a39){ a39[4]=2019; a39[8]='4 settimane'; }
   if(f39){ f39[4]=2019; f39[8]='4 settimane'; f39[26]='Breve < 1 mese'; f39[33]='Arte e istruzione; Cfb+temperato; Breve < 1 mese; Struttura reciproca; Legno massiccio'; }
@@ -99,5 +90,21 @@
   // Attività specifica = normalizzazione della funzione descrittiva; fattori di sito = solo condizioni già documentate, mai dedotte dalla sola città.
   F.activitySpecific={1:'Promozione',2:'Vendita',3:'Vendita',4:'Esposizione',5:'Esposizione',6:'Esposizione',7:'Esposizione',8:'Esposizione',9:'Esposizione',10:'Esperienza immersiva',11:'Esposizione',12:'Sport',13:'Esposizione',14:'Eventi culturali',15:'Spettacolo',16:'Festival',17:'Spettacolo',18:'Festival',19:'Supporto festival',20:'Eventi',21:'Spettacolo',22:'Spettacolo',23:'Servizi al pubblico',24:'Eventi corporate',25:'Congressi ed eventi',26:'Alloggio emergenziale',27:'Alloggio emergenziale',28:'Alloggio emergenziale',29:'Alloggio temporaneo',30:'Rifugio',31:'Rifugio',32:'Alloggio temporaneo',33:'Rifugio',34:'Alloggio emergenziale',35:'Rifugio',36:'Istruzione',37:'Istruzione',38:'Workshop',39:'Installazione culturale',40:'Workshop',41:'Istruzione',42:'Didattica ed esposizione',43:'Installazione artistica',44:'Mostra ed educazione',45:'Culto',46:'Esposizione'};
   F.siteFactorsControlled={1:['Sole / rischio di surriscaldamento','Pioggia o neve','Terreno irregolare / pendenza'],2:['Sole / rischio di surriscaldamento'],8:['Pioggia o neve','Altro fattore specifico'],9:['Altro fattore specifico'],16:['Altro fattore specifico'],18:['Pioggia o neve'],20:['Sole / rischio di surriscaldamento'],27:['Altro fattore specifico'],29:['Terreno irregolare / pendenza'],34:['Pioggia o neve','Terreno irregolare / pendenza'],35:['Vento / forte esposizione'],37:['Vento / forte esposizione']};
+
+  // Allineamento documentale finale dei casi studio.
+  const setCase=(id,vals)=>{const a=F.abaco.find(x=>Number(x[0])===id),f=F.filterable.find(x=>Number(x[0])===id);Object.entries(vals).forEach(([k,v])=>{const i=Number(k);if(a)a[i]=v;if(f&&i<26)f[i]=v;});};
+  setCase(12,{8:'4 anni'});
+  setCase(20,{8:'8 mesi'});
+  setCase(24,{8:'4 settimane per edizione',25:'https://www.form-tl.de/en/project/international-airshow-farnborough-gb/'});
+  setCase(26,{8:'n.d.'}); setCase(27,{8:'n.d.'}); setCase(28,{8:'n.d.'});
+  setCase(31,{8:'n.d.',19:'2 adulti, 1 giorno, utensili comuni'});
+  setCase(32,{8:'n.d.',20:'Progetto di ricerca; realizzazione e riuso effettivo non accertati',23:'Non noto'});
+  setCase(34,{8:'n.d.',20:'Prototipo costruito; durata e riuso effettivo non documentati'});
+  setCase(35,{23:'Non noto',24:'Fonte bibliografica da verificare'});
+  setCase(36,{19:'2 mesi complessivi di produzione e installazione'});
+  setCase(39,{4:2020,8:'4 settimane'}); setCase(41,{8:'n.d.',19:'Costruito in 10 giorni'});
+  setCase(43,{20:'Convertito in 410 set di arredi',23:'Documentato'});
+  setCase(44,{8:'5 settimane (6 maggio–12 giugno 2022)'});
+  setCase(46,{2:'Zero Gravity Pavilion',3:'Serenay Elmas, Günther H. Filz, Athanasios Markou / Aalto University',4:2019,5:'Espoo, Finlandia',8:'Installazione 11–22 ottobre 2019; ulteriori cicli di assemblaggio e riuso documentati',10:'Padiglione cinematico leggero, sistema Stewart–Gough con struttura lignea e copertura in compensato',20:'Smontato e rimontato più volte in luoghi differenti; componenti separabili; riutilizzabilità teorica del 96% in massa dopo i cicli',23:'Documentato',25:'https://research.aalto.fi/en/publications/an-ephemeral-kinematic-pavilion-in-the-light-of-assemblydisassemb/'});
 
 })();
