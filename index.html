@@ -101,9 +101,9 @@ function guidedConstraintChecks(r){
  if(multiCriteria.trasportoMode==='constraint'&&multiCriteria.trasporto.length)verify('Trasporto',multiCriteria.trasporto.join(' oppure '),t,multiCriteria.trasporto.includes(t));
  const m=String(r[10]||'').trim();
  if(multiCriteria.montaggioMode==='constraint'&&multiCriteria.montaggio)verify('Mezzi di montaggio',multiCriteria.montaggio,m,/^M[1-5]$/.test(m)&&Number(m[1])<=Number(multiCriteria.montaggio.slice(1)));
- if(multiCriteria.funzioneMode==='constraint'&&criteria.funzione){const names=['','Esposizioni/commercio','Divertimento/eventi','Rifugi/alloggi','Arte/istruzione'];const v=auditedValue(String(r[0]),names[criteria.funzione]);checks.push({label:'Destinazione d’uso',expected:names[criteria.funzione],actual:v===null?'n.d.':v,state:v===null?'unknown':v===0?'fail':'ok'});}
- if(multiCriteria.durataMode==='constraint'&&criteria.durata){const names=['','Breve: giorni-settimane','Stagionale: 1-6 mesi','Medio: 6-24 mesi','Pluriennale: 2-10 anni'];const v=auditedValue(String(r[0]),names[criteria.durata]);checks.push({label:'Durata',expected:names[criteria.durata],actual:v===null?'n.d.':v,state:v===null?'unknown':v===0?'fail':'ok'});}
- if(multiCriteria.rapiditaMode==='constraint'&&multiCriteria.rapidita){const raw=r[15],v=Number(raw);const missing=raw===null||raw===undefined||String(raw).trim()===''||String(raw).trim()==='n.d.'||!Number.isFinite(v);checks.push({label:'Rapidità di montaggio',expected:multiCriteria.rapidita,actual:missing?'n.d.':({1:'Bassa',2:'Media',3:'Alta'}[v]||'n.d.'),state:missing?'unknown':v>=Number(multiCriteria.rapidita)?'ok':'fail'});}
+ if(multiCriteria.funzioneMode==='constraint'&&criteria.funzione){const names=['','Esposizioni/commercio','Divertimento/eventi','Rifugi/alloggi','Arte/istruzione'];const v=auditedValue(String(r[0]),names[criteria.funzione]);checks.push({label:'Destinazione d’uso',expected:names[criteria.funzione],actual:v===null?'n.d.':v,state:compatibilityState(v)});}
+ if(multiCriteria.durataMode==='constraint'&&criteria.durata){const names=['','Breve: giorni-settimane','Stagionale: 1-6 mesi','Medio: 6-24 mesi','Pluriennale: 2-10 anni'];const v=auditedValue(String(r[0]),names[criteria.durata]);checks.push({label:'Durata',expected:names[criteria.durata],actual:v===null?'n.d.':v,state:compatibilityState(v)});}
+ if(multiCriteria.rapiditaMode==='constraint'&&multiCriteria.rapidita){checks.push({label:'Rapidità di montaggio',expected:multiCriteria.rapidita,actual:'n.d.',state:'unknown'});}
  if(multiCriteria.sistemaMode==='constraint')verify('Sistema',multiCriteria.sistema.join(' oppure '),r[2],multiCriteria.sistema.includes(r[2]));
  if(multiCriteria.materialeMode==='constraint')verify('Materiale',multiCriteria.materiale.join(' oppure '),r[3],multiCriteria.materiale.includes(r[3]));
  if(multiCriteria.prefabbricazioneMode==='constraint')verify('Prefabbricazione',multiCriteria.prefabbricazione,r[7],r[7]===multiCriteria.prefabbricazione);
@@ -139,14 +139,34 @@ const AUDIT_SCORE={C:2,A:1,I:0,N:null,X:null};
    }
  });
 })();
-function auditedValue(id,param){const p=AUDIT_PARAMS.indexOf(param),c=AUDIT_CODES[id];return p<0||!c?null:AUDIT_SCORE[c[p]];}
+function auditedValue(id,param){
+ const p=AUDIT_PARAMS.indexOf(param),codes=AUDIT_CODES[id];
+ if(p<0||!codes)return null;
+ const code=codes[p];
+ // Solo le quattro destinazioni d'uso conservano la scala 1–3.
+ if(p>=4&&p<=7)return code==='C'?3:code==='A'?2:code==='I'?1:null;
+ // Tutti gli altri requisiti usano stati di compatibilità, non punteggi numerici.
+ return code==='C'?'Coerente':code==='A'?'Adattabile':code==='I'?'Incompatibile':code==='N'?'Non valutabile':code==='X'?'N/A':null;
+}
+function compatibilityState(v){
+ if(v===null||v===undefined||v==='Non valutabile'||v==='N/A')return 'unknown';
+ if(v==='Incompatibile'||v===1)return 'fail';
+ return 'ok';
+}
+function preferenceValue(v){
+ if(v===null||v===undefined||v==='Non valutabile'||v==='N/A')return null;
+ if(v==='Coerente'||v===3)return 2;
+ if(v==='Adattabile'||v===2)return 1;
+ if(v==='Incompatibile'||v===1)return 0;
+ return null;
+}
 function ranked(){return S.map((r,i)=>{
  const pref=[],id=String(r[0]);
- const addAudit=(label,param)=>pref.push({label,value:auditedValue(id,param)});
+ const addAudit=(label,param)=>pref.push({label,value:preferenceValue(auditedValue(id,param))});
  if(criteria.funzione&&multiCriteria.funzioneMode==='preference'){const names=["","Esposizioni/commercio","Divertimento/eventi","Rifugi/alloggi","Arte/istruzione"];addAudit("Destinazione d’uso",names[criteria.funzione]);}
  if(criteria.durata&&multiCriteria.durataMode==='preference'){const names=["","Breve: giorni-settimane","Stagionale: 1-6 mesi","Medio: 6-24 mesi","Pluriennale: 2-10 anni"];addAudit("Durata",names[criteria.durata]);} // Le etichette AUDIT_PARAMS restano quelle della matrice; l’interfaccia esplicita il confine: medio >6 e <24 mesi, pluriennale ≥24 mesi.
  if(criteria.clima){const c=choices.clima[criteria.clima];const param=c.includes('caldo-arido')?'Caldo-arido':c.includes('caldo-umido')?'Caldo-umido':c.includes('mediterraneo')?'Mediterraneo':c.includes('temperato')?'Temperato':null;pref.push({label:'Clima',value:param?auditedValue(id,param):null});}
- if(multiCriteria.rapidita&&multiCriteria.rapiditaMode==='preference'){const raw=r[15],v=Number(raw);pref.push({label:'Rapidità',value:raw===null||raw===undefined||String(raw).trim()===''||String(raw).trim()==='n.d.'||!Number.isFinite(v)?null:(v>=Number(multiCriteria.rapidita)?2:0)});}
+ if(multiCriteria.rapidita&&multiCriteria.rapiditaMode==='preference'){pref.push({label:'Rapidità',value:null});}
  if(multiCriteria.trasportoMode==='preference'&&multiCriteria.trasporto.length){const t=String(r[8]||'').trim();pref.push({label:'Trasporto preferito',value:!t||t==='n.d.'?null:(multiCriteria.trasporto.includes(t)?2:0)});}
  if(multiCriteria.montaggioMode==='preference'&&multiCriteria.montaggio){const m=String(r[10]||'').trim();pref.push({label:'Montaggio preferito',value:!/^M[1-5]$/.test(m)?null:(Number(m[1])<=Number(multiCriteria.montaggio.slice(1))?2:0)});}
  else if(criteria.priorita&&criteria.priorita!==1&&criteria.priorita!==5){const names={2:"Reversibilita (1-3)",3:"Capacità di controllo dell'ambiente interno",4:"Luce libera documentata"};addAudit("Priorità",names[criteria.priorita]);}
@@ -166,7 +186,7 @@ function stressTestNP(){
  const tests=[
   ["Trasporto T1",r=>{const a=String(r[8]||'').trim();return !a||a==='n.d.'?'unknown':a==='T1'?'ok':'fail';}],
   ["Montaggio massimo M2",r=>{const a=String(r[10]||'').trim();return !/^M[1-5]$/.test(a)?'unknown':Number(a[1])<=2?'ok':'fail';}],
-  ["Rapidità alta",r=>{const a=r[15],v=Number(a);return a===null||a===undefined||String(a).trim()===''||String(a).trim()==='n.d.'||!Number.isFinite(v)?'unknown':v>=3?'ok':'fail';}],
+  ["Rapidità alta",r=>'unknown'],
   ["Sistema moduli 3D",r=>{const a=String(r[2]||'').trim();return !a||a==='n.d.'?'unknown':a==='Moduli volumetrici 3D'?'ok':'fail';}],
   ["Materiale acciaio",r=>{const a=String(r[3]||'').trim();return !a||a==='n.d.'?'unknown':a==='Acciaio'?'ok':'fail';}],
   ["Prefabbricazione P4",r=>{const a=String(r[7]||'').trim();return !a||a==='n.d.'?'unknown':a==='P4'?'ok':'fail';}]
