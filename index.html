@@ -115,7 +115,7 @@ function ranked(){return S.map((r,i)=>{
  const pref=[],id=String(r[0]);
  const addAudit=(label,param)=>pref.push({label,value:auditedValue(id,param)});
  if(criteria.funzione){const names=["","Esposizioni/commercio","Divertimento/eventi","Rifugi/alloggi","Arte/istruzione"];addAudit("Destinazione d’uso",names[criteria.funzione]);}
- if(criteria.durata){const names=["","Breve: giorni-settimane","Stagionale: 1-6 mesi","Medio: 6-24 mesi","Pluriennale: 2-10 anni"];addAudit("Durata",names[criteria.durata]);}
+ if(criteria.durata){const names=["","Breve: giorni-settimane","Stagionale: 1-6 mesi","Medio: 6-24 mesi","Pluriennale: 2-10 anni"];addAudit("Durata",names[criteria.durata]);} // Le etichette AUDIT_PARAMS restano quelle della matrice; l’interfaccia esplicita il confine: medio >6 e <24 mesi, pluriennale ≥24 mesi.
  if(criteria.clima){const c=choices.clima[criteria.clima];const param=c.includes('caldo-arido')?'Caldo-arido':c.includes('caldo-umido')?'Caldo-umido':c.includes('mediterraneo')?'Mediterraneo':c.includes('temperato')?'Temperato':null;pref.push({label:'Clima',value:param?auditedValue(id,param):null});}
  if(multiCriteria.rapidita||criteria.priorita===1)addAudit("Rapidità","Rapidita montaggio (1-3)");
  else if(criteria.priorita&&criteria.priorita!==1&&criteria.priorita!==5){const names={2:"Reversibilita (1-3)",3:"Comfort potenziale (1-3)",4:"Grandi luci (1-3)"};addAudit("Priorità",names[criteria.priorita]);}
