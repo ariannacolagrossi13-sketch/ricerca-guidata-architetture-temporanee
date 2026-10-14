@@ -112,6 +112,33 @@ function guidedConstraintChecks(r){
 const AUDIT_PARAMS=["Reversibilita (1-3)","Capacità di controllo dell'ambiente interno","Luce libera documentata","Rapidità di montaggio","Esposizioni/commercio","Divertimento/eventi","Rifugi/alloggi","Arte/istruzione","Caldo-arido","Caldo-umido","Mediterraneo","Temperato","Freddo/montano","Breve: giorni-settimane","Stagionale: 1-6 mesi","Medio: 6-24 mesi","Pluriennale: 2-10 anni"];
 const AUDIT_CODES={"S01":"CANNCCNNNNNNNCCNN","S02":"AANACANNNANNNCANN","S03":"CCNANNNCNNNANNACN","S04":"NNNNNNNNNNNNNNNNN","S05":"CANCCACANNNNACNNN","S06":"AANCANCAAAACACCCA","S07":"NNNNNNNNNNNNNNNNN","S08":"ANNANCNANNANNCCNN","S09":"ANCNNCNANANNNNACN","S10":"NNNNNNNNNNNNNNNNN","S11a":"CANANNCNNNNNNCNNN","S11b":"ANCNCNNNNNNANNCNN","S12":"CANNCNNNNNNNNNNNN","S13":"XXXXXXXXXXXXXXXXX","S14":"CNNNCANCNNNNNCNNN","S15":"CANNACCNNNNNNNNNC","S16":"CACNCCNCNNNNNCNNN"};
 const AUDIT_SCORE={C:2,A:1,I:0,N:null,X:null};
+// Normalizzazione finale della matrice: la scala numerica 1–3 resta esclusivamente
+// nelle quattro categorie di destinazione d'uso (colonne Q:T).
+// Gli altri vecchi indicatori numerici non vengono riutilizzati come prestazioni.
+(function(){
+ const h=DATA.solutionHeaders, rows=DATA.solutions;
+ h[9]='T · nessun indice progressivo';
+ h[11]='Livello attrezzatura M (1–5)';
+ h[12]='Reversibilità (compatibilità tecnica)';
+ h[13]="Capacità di controllo dell'ambiente interno";
+ h[14]='Luce libera documentata (m)';
+ h[15]='Rapidità di montaggio (qualitativa / n.d.)';
+ rows.forEach(r=>{
+   r[9]='n.d.';
+   r[11]=/^M[1-5]$/.test(String(r[10]||'')) ? String(r[10]).slice(1) : 'n.d.';
+   r[12]='n.d.';
+   r[13]='n.d.';
+   r[14]='n.d.';
+   r[15]='n.d.';
+   const id=String(r[0]), codes=AUDIT_CODES[id];
+   if(codes){
+     for(let j=20;j<=28;j++){
+       const code=codes[j-16];
+       r[j]=code==='C'?'Coerente':code==='A'?'Adattabile':code==='I'?'Incompatibile':code==='N'?'Non valutabile':code==='X'?'N/A':'n.d.';
+     }
+   }
+ });
+})();
 function auditedValue(id,param){const p=AUDIT_PARAMS.indexOf(param),c=AUDIT_CODES[id];return p<0||!c?null:AUDIT_SCORE[c[p]];}
 function ranked(){return S.map((r,i)=>{
  const pref=[],id=String(r[0]);
