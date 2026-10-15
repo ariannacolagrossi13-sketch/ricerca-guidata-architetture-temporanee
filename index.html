@@ -259,7 +259,7 @@ const changed=previousGuidedSnapshot?Object.keys(currentSnapshot).filter(k=>JSON
 solutionResults();
 if(previousGuidedSnapshot&&changed.length===1){$('guidedSummary').insertAdjacentHTML('afterbegin','<div class="notice"><strong>Test di sensibilità · un solo parametro modificato:</strong> '+esc(changed[0])+'. Il ranking è stato ricalcolato mantenendo invariati gli altri input.</div>')}
 previousGuidedSnapshot=currentSnapshot;const matched=C.filter((r,i)=>{
- const fr=F.filterable[i]||[],climateChoice=criteria.clima?(choices.clima?.[criteria.clima]||''):'',climateSelected=String(climateChoice).slice(0,3).toLowerCase(),code=String(fr[6]||'').trim().slice(0,3).toLowerCase();
+ const fr=F[i]||[],climateChoice=criteria.clima?(choices.clima?.[criteria.clima]||''):'',climateSelected=String(climateChoice).slice(0,3).toLowerCase(),code=String(fr[6]||'').trim().slice(0,3).toLowerCase();
  const useSelected=criteria.funzione?(choices.funzione?.[criteria.funzione]||''):'';
  const surface=$('superficie').value;
  return (!useSelected||fr[1]===useSelected)&&(!filters.activity||attivitaCasi[i]===filters.activity)&&(!surface||fr[27]===surface)&&(!climateSelected||code===climateSelected)&&(!filters.configuration||configurazioneCasi[i]===filters.configuration)&&(!filters.periods.length||filters.periods.includes(stagioniCasi[i])||stagioniCasi[i]==='Più stagioni');
