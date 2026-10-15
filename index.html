@@ -167,12 +167,12 @@ function preferenceValue(v){
  if(v==='Incompatibile'||v===1)return 0;
  return null;
 }
-function ranked(){return S.map((r,i)=>{
+function ranked(){return S.filter(Array.isArray).map((r,i)=>{
  const pref=[],id=String(r[0]);
  const addAudit=(label,param)=>pref.push({label,value:preferenceValue(auditedValue(id,param))});
  if(criteria.funzione&&multiCriteria.funzioneMode==='preference'){const names=["","Esposizioni/commercio","Divertimento/eventi","Rifugi/alloggi","Arte/istruzione"];addAudit("Destinazione d’uso",names[criteria.funzione]);}
  if(criteria.durata&&multiCriteria.durataMode==='preference'){const names=["","Breve: giorni-settimane","Stagionale: 1-6 mesi","Medio: 6-24 mesi","Pluriennale: 2-10 anni"];addAudit("Durata",names[criteria.durata]);} // Le etichette AUDIT_PARAMS restano quelle della matrice; l’interfaccia esplicita il confine: medio >6 e <24 mesi, pluriennale ≥24 mesi.
- if(criteria.clima){const c=choices.clima[criteria.clima];const param=c.includes('caldo-arido')?'Caldo-arido':c.includes('caldo-umido')?'Caldo-umido':c.includes('mediterraneo')?'Mediterraneo':c.includes('temperato')?'Temperato':null;pref.push({label:'Clima',value:param?auditedValue(id,param):null});}
+ if(criteria.clima){const c=String(choices.clima?.[criteria.clima]||'');const param=c.includes('caldo-arido')?'Caldo-arido':c.includes('caldo-umido')?'Caldo-umido':c.includes('mediterraneo')?'Mediterraneo':c.includes('temperato')?'Temperato':null;pref.push({label:'Clima',value:param?auditedValue(id,param):null});}
  if(multiCriteria.rapidita&&multiCriteria.rapiditaMode==='preference'){const raw=r[15],v=Number(raw);pref.push({label:'Rapidità',value:raw===null||raw===undefined||String(raw).trim()===''||String(raw).trim()==='n.d.'||!Number.isFinite(v)?null:(v>=Number(multiCriteria.rapidita)?2:0)});}
  if(multiCriteria.trasportoMode==='preference'&&multiCriteria.trasporto.length){const t=String(r[8]||'').trim();pref.push({label:'Trasporto preferito',value:!t||t==='n.d.'?null:(multiCriteria.trasporto.includes(t)?2:0)});}
  if(multiCriteria.montaggioMode==='preference'&&multiCriteria.montaggio){const m=String(r[10]||'').trim();pref.push({label:'Montaggio preferito',value:!/^M[1-5]$/.test(m)?null:(Number(m[1])<=Number(multiCriteria.montaggio.slice(1))?2:0)});}
@@ -189,7 +189,7 @@ function ranked(){return S.map((r,i)=>{
  return {r,i,checks,failures,unknowns,groundStatus,pref,ic,coverage,evaluatedCount:nv,requestedCount:nr};
  }).sort((a,b)=>a.failures.length-b.failures.length||(b.coverage??-1)-(a.coverage??-1)||(b.ic??-1)-(a.ic??-1)||a.i-b.i)}
 function stressTestNP(){
- const rankable=S.filter(r=>!["S07","S10","S13"].includes(String(r[0])));
+ const rankable=S.filter(r=>Array.isArray(r)&&!["S07","S10","S13"].includes(String(r[0])));
  const tests=[
   ["Trasporto T1",r=>{const a=String(r[8]||'').trim();return !a||a==='n.d.'?'unknown':a==='T1'?'ok':'fail';}],
   ["Montaggio massimo M2",r=>{const a=String(r[10]||'').trim();return !/^M[1-5]$/.test(a)?'unknown':Number(a[1])<=2?'ok':'fail';}],
