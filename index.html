@@ -81,7 +81,7 @@ function referenceCasesHtml(r){
  const raw=String(r[31]||'').trim();
  if(!raw||/^(n\.d\.|nessuno|—|-)$/i.test(raw))return '<p class="muted"><strong>Casi di riferimento:</strong> non documentati.</p>';
  const ids=[...raw.matchAll(/(?:^|[;,\n]|\s)\s*(\d{1,3})\s*[–—-]\s*/g)].map(m=>Number(m[1]));
- const matches=C.map((c,i)=>({c,i})).filter(({c})=>ids.includes(Number(c[0]))||(!ids.length&&raw.toLocaleLowerCase('it').includes(String(c[2]).toLocaleLowerCase('it'))));
+ const matches=C.map((c,i)=>({c,i})).filter(({c})=>Array.isArray(c)&&(ids.includes(Number(c[0]))||(!ids.length&&raw.toLocaleLowerCase('it').includes(String(c[2]||'').toLocaleLowerCase('it')))));
  const unique=[...new Map(matches.map(x=>[x.i,x])).values()];
  return '<div class="reference-cases"><strong>Casi di riferimento:</strong> '+(unique.length?unique.map(({c,i})=>'<button type="button" class="case-ref-link" data-case-ref="'+i+'">'+esc(c[2])+'</button>').join(' · '):esc(raw))+'</div>';
 }
